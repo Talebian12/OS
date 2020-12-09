@@ -5,6 +5,9 @@ use core::fmt;
 use lazy_static::lazy_static;
 use spin::Mutex;
 
+
+/* COLOR CODES DEFINITION */
+
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
@@ -37,12 +40,20 @@ impl ColorCode {
     }
 }
 
+/* CHAR ON SCREEN STRUCTURE */
+//
+// CHARACTER
+// COLOR CODE: FOREGROUND COLOR, BACKGROUND COLOR
+//
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 struct ScreenChar {
     ascii_character: u8,
     color_code: ColorCode
 }
+
+/* BUFFER */
 
 const BUFFER_HEIGHT: usize =  25;
 const BUFFER_WIDTH: usize  =  80;
@@ -58,7 +69,10 @@ pub struct Writer {
     buffer: &'static mut Buffer,
 }
 
+/* WRITE */
+
 impl Writer {
+    // WRITE SINGLE BYTE
     pub fn write_byte(&mut self, byte: u8) {
         match byte {
             b'\n' => self.new_line(),
@@ -79,6 +93,7 @@ impl Writer {
         }
     }
     
+    // WRITE MULTIPLE BYTES | STRING
     pub fn write_string(&mut self, s: &str) {
         for byte in s.bytes() {
             match byte {
@@ -88,6 +103,7 @@ impl Writer {
         }
     }
     
+    // NEWLINE
     fn new_line(&mut self) {
         for row in 1..BUFFER_HEIGHT {
             for col in 0..BUFFER_WIDTH {
@@ -99,6 +115,7 @@ impl Writer {
         self.column_position = 0;
     }
 
+    // CLEAR CURRENT ROW
     fn clear_row(&mut self, row: usize) {
         let blank = ScreenChar {
             ascii_character: b' ',
@@ -110,6 +127,7 @@ impl Writer {
     }
 }
 
+// IMPLEMENT WRITE
 impl fmt::Write for Writer {
     fn write_str(&mut self, s: &str) -> fmt::Result {
         self.write_string(s);
@@ -125,10 +143,14 @@ lazy_static! {
     });
 }
 
+// PRINT MACRO
+
 #[macro_export]
 macro_rules! print {
     ($($arg:tt)*) => ($crate::vga_buffer::_print(format_args!($($arg)*)));
 }
+
+// PRINTLN MACRO
 
 #[macro_export]
 macro_rules! println {
