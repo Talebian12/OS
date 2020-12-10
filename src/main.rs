@@ -17,10 +17,15 @@ use os::println;
 pub extern "C" fn _start() -> ! {
     println!("Hello World!");
     
+    os::init(); // INIT IDT
+
+    x86_64::instructions::interrupts::int3();
+
     // START TEST <- CARGO TEST
     #[cfg(test)]
     test_main();
-
+    
+    println!("It didn't crash!");
     loop {}
 }
 
@@ -41,3 +46,7 @@ fn panic(info: &PanicInfo) -> ! {
     os::test_panic_handler(info)
 }
 
+#[test_case]
+fn trivial_assertion() {
+    assert_eq!(1, 1);
+}
