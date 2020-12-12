@@ -1,2 +1,2 @@
 # OS
-OS built in Rust following https://os.phil-opp.com/
+OS made in Rust following https://os.phil-opp.com/
