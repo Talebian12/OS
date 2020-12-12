@@ -5,6 +5,8 @@ use x86_64::structures::tss::TaskStateSegment;
 use x86_64::structures::gdt::{GlobalDescriptorTable, Descriptor, SegmentSelector};
 use lazy_static::lazy_static;
 
+/// CONSTANTS
+
 pub const DOUBLE_FAULT_IST_INDEX: u16 = 0; // Interrupt Stack Table Index
 
 /* GDT */
@@ -60,7 +62,7 @@ lazy_static! {
             // STACK
             static mut STACK: [u8; STACK_SIZE] = [0; STACK_SIZE];
 
-            let stack_start = VirtAddr::from_ptr((unsafe{&STACK}));
+            let stack_start = VirtAddr::from_ptr(unsafe{&STACK});
             let stack_end   = stack_start + STACK_SIZE;
 
 
