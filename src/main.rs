@@ -17,9 +17,7 @@ use os::println;
 pub extern "C" fn _start() -> ! {
     println!("Hello World!");
     
-    os::init(); // INIT IDT
-
-    x86_64::instructions::interrupts::int3();
+    os::init(); // INIT GDT AND IDT;
 
     // START TEST <- CARGO TEST
     #[cfg(test)]

@@ -9,9 +9,10 @@
 
 use core::panic::PanicInfo;
 
+pub mod gdt;
+pub mod interrupts;
 pub mod serial;
 pub mod vga_buffer;
-pub mod interrupts;
 
 /* TEST */
 
@@ -64,8 +65,9 @@ fn panic(info: &PanicInfo) -> ! {
     test_panic_handler(info)
 }
 
-// INIT IDT
+// INIT IDT AND GDT
 pub fn init() {
+    gdt::init();
     interrupts::init_idt();
 }
 
