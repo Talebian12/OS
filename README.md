@@ -16,8 +16,8 @@ Cargo automatically runs everything on QEMU, standard run and tests.
 
 ## Execution
 
-In order to execute that, make sure you have done `rustup update` and `cargo update`, to be sure that everything is updated.
+In order to execute it, make sure you have done `rustup update` and `cargo update`, to be sure that everything is updated.
 
-You can run kernel with the command `cargo run`, tests can be done with `cargo test` or `cargo test --test test_name` so to execute 
+You can run the kernel with the command `cargo run`, tests can be done with `cargo test` or `cargo test --test test_name` so to you can execute 
 a specific test target.
 
