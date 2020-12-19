@@ -18,6 +18,8 @@ pub extern "C" fn _start() -> ! {
     println!("Hello World!");
     
     os::init(); // INIT GDT AND IDT;
+    
+    use x86_64::registers::control::Cr3; 
 
     // START TEST <- CARGO TEST
     #[cfg(test)]
