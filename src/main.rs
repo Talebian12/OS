@@ -8,13 +8,19 @@
 #![test_runner(os::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+use bootloader::{ bootloader., entry_point};
 use core::panic::PanicInfo;
 use os::println;
 
+/// SET ENTRYPOINT
+
+entry_point!(kernel_main);
+
 /* START */
 
-#[no_mangle]
-pub extern "C" fn _start() -> ! {
+fn kernel_main(
+    boot_info: &'static BootInfo) -> ! 
+{
     println!("Hello World!");
     
     os::init(); // INIT GDT AND IDT;
