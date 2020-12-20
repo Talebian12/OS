@@ -19,16 +19,18 @@ use x86_64::{
     PhysAddr,
 };
 
+/// INIT
+
+pub unsafe fn init(physical_memory_offset: VirtAddr) -> OffsetPageTable<'static> {
+    let lv4_table = active_lv4_table(physical_memory_offset);
+    OffsetPageTable::new(lv4_table, physical_memory_offset)
+}
+
 pub struct EmptyFrameAllocator;
 
 pub struct BootInfoFrameAllocator {
     memory_map: &'static MemoryMap,
     next: usize,
-}
-
-pub unsafe fn init(physical_memory_offset: VirtAddr) -> OffsetPageTable<'static> {
-    let lv4_table = active_lv4_table(physical_memory_offset);
-    OffsetPageTable::new(lv4_table, physical_memory_offset)
 }
 
 /// RETURN MUTABLE REFERENCE TO ACTIVE LV4 TABLE
@@ -94,7 +96,7 @@ fn translate_addr_inner(
 
 /// BOOT INFO FRAME ALLOCATOR
 impl BootInfoFrameAllocator {
-    // Create a FrameAllocator from the passed memory map.
+    // Create a FrameAllocator from memory map
     pub unsafe fn init(memory_map: &'static MemoryMap) -> Self {
         BootInfoFrameAllocator {
             memory_map,
@@ -134,7 +136,7 @@ unsafe impl FrameAllocator<Size4KiB> for BootInfoFrameAllocator {
 }
 
 
-/// EXAMPLE MAPPING
+/// EXAMPLE MAPPING - TESTING
 
 pub fn create_example_mapping(
     page: Page,
@@ -150,5 +152,6 @@ pub fn create_example_mapping(
         // FIXME: this is not safe, we do it only for testing
         mapper.map_to(page, frame, flags, frame_allocator)
     };
+
     map_to_result.expect("map_to failed").flush();
 }

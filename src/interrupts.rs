@@ -13,7 +13,9 @@ pub const PIC_1_OFFSET: u8 = 32;
 pub const PIC_2_OFFSET: u8 = PIC_1_OFFSET + 8;
 
 // PIC
-pub static PICS: spin::Mutex<ChainedPics> = spin::Mutex::new(unsafe { ChainedPics::new(PIC_1_OFFSET, PIC_2_OFFSET)});
+pub static PICS: spin::Mutex<ChainedPics> = spin::Mutex::new( unsafe { 
+    ChainedPics::new(PIC_1_OFFSET, PIC_2_OFFSET)
+});
 
 /* INIT INTERRUPT DESCRIPTOR TABLE */
 
@@ -21,10 +23,12 @@ lazy_static! {
     static ref IDT: InterruptDescriptorTable = {
         let mut idt = InterruptDescriptorTable::new(); // IDT new instance of InterruptDescriptorTable
         idt.breakpoint.set_handler_fn(breakpoint_handler); // set breakpoint_handler as handler
+
         unsafe {
             idt.double_fault.set_handler_fn(double_fault_handler)
                 .set_stack_index(gdt::DOUBLE_FAULT_IST_INDEX);
         }
+
         idt[InterruptIndex::Timer.as_usize()].set_handler_fn(timer_interrupt_handler);
         idt[InterruptIndex::Keyboard.as_usize()].set_handler_fn(keyboard_interrupt_handler);
         idt.page_fault.set_handler_fn(page_fault_handler);
@@ -46,6 +50,8 @@ impl InterruptIndex {
     fn as_u8(self) -> u8 { self as u8 }
     fn as_usize(self) -> usize {usize::from(self.as_u8())}
 }
+
+/// INIT
 
 pub fn init_idt() {
     IDT.load(); // load IDT

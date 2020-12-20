@@ -19,8 +19,7 @@ entry_point!(kernel_main);
 
 /* START */
 
-fn kernel_main(
-    boot_info: &'static BootInfo) -> ! 
+fn kernel_main(boot_info: &'static BootInfo) -> ! 
 {
     use os::memory;
     use os::memory::BootInfoFrameAllocator;
@@ -54,6 +53,8 @@ fn kernel_main(
     #[cfg(test)]
     test_main();
     
+
+    // ALL HAS BEEN EXECUTED, KERNEL DIDN'T CRASH
     println!("It didn't crash!");
     os::hlt_loop();
 }
