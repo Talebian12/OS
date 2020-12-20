@@ -8,9 +8,12 @@
 #![test_runner(os::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+extern crate alloc;
+
 use x86_64::structures::paging::PageTable;
 use bootloader::{ BootInfo, entry_point};
 use core::panic::PanicInfo;
+use alloc::boxed::Box;
 use os::println;
 
 /// SET ENTRYPOINT
@@ -48,6 +51,8 @@ fn kernel_main(boot_info: &'static BootInfo) -> !
         page_ptr.offset(400)
                 .write_volatile(0x_f021_f077_f065_f04e)
     };
+    
+    let x = Box::new(41);
 
     // START TEST <- CARGO TEST
     #[cfg(test)]
