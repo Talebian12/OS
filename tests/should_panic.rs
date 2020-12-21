@@ -1,5 +1,7 @@
 // tests/should_panic.rs
 
+/* FEATURES */
+
 #![no_std]
 #![no_main]
 

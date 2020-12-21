@@ -1,5 +1,7 @@
 // tests/basic_boot.rs
 
+/* FEATURES */
+
 #![no_std]
 #![no_main]
 #![feature(custom_test_frameworks)]
