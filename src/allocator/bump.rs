@@ -1,5 +1,10 @@
 // src/allocator/bump.rs
 
+use core::ptr;
+use super::{
+    align_up,
+    Locked,
+};
 use alloc::alloc::{
     GlobalAlloc, 
     Layout,
@@ -46,4 +51,33 @@ unsafe impl GlobalAlloc for BumpAllocator {
         todo!()
     }
 
+}
+
+unsafe impl GlobalAlloc for Locked<BumpAllocator> {
+    unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
+        let mut bump = self.lock(); // MUTABLE REFERENCE
+
+        let alloc_start = align_up(bump.next, layout.align());
+        let alloc_end = match alloc_start.checked_add(layout.size()) {
+            Some(end) => end,
+            None => return ptr::null_mut(),
+        };
+
+        if alloc_end > bump.heap_end {
+            ptr::null_mut()
+        } else {
+            bump.next = alloc_end;
+            bump.allocations += 1;
+            alloc_start as *mut u8
+        }
+    }
+
+    unsafe fn dealloc(&self, _ptr: *mut u8, _layout: Layout) {
+        let mut = self.lock();
+
+        bump.allocations -= 1;
+        if bump.allocations == 0 {
+            bump.next = bump.heap_start;
+        }
+    }
 }
